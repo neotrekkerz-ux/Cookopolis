@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cookopolis Bay — Revised Layout</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap');
+:root {
+  --bg: #0d1117;
+  --panel: #161c26;
+  --gold: #c9a84c;
+  --gold2: #e8c97a;
+  --amber: #d4781a;
+  --teal: #2a8a7a;
+  --teal2: #3dbba8;
+  --muted: #6a7585;
+  --text: #d8cfc0;
+  --border: rgba(201,168,76,0.2);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Crimson Pro', Georgia, serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+header {
+  text-align: center;
+  padding: 2rem 2rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.badge {
+  font-family: 'Cinzel', serif;
+  font-size: .6rem;
+  letter-spacing: .35em;
+  color: var(--amber);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: .5rem;
+}
+h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  color: var(--gold2);
+  letter-spacing: .06em;
+  margin-bottom: .25rem;
+}
+.sub {
+  font-style: italic;
+  color: var(--muted);
+  font-size: .9rem;
+}
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.tab {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: .35rem 1rem;
+  font-family: 'Cinzel', serif;
+  font-size: .7rem;
+  letter-spacing: .1em;
+  cursor: pointer;
+  transition: all .2s;
+  text-transform: uppercase;
+}
+.tab:hover, .tab.on {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(201,168,76,.07);
+}
+.view { display: none; padding: 1.5rem; max-width: 1100px; margin: 0 auto; }
+.view.on { display: block; }
+
+/* ── AERIAL VIEW ── */
+.aerial-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.aerial-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.zone-label {
+  font-family: 'Cinzel', serif;
+  font-size: 9px;
+  fill: #fff;
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.7);
+  stroke-width: 3px;
+  font-weight: 600;
+  letter-spacing: .05em;
+}
+.zone-label-sm {
+  font-family: 'Cinzel', serif;
+  font-size: 7.5px;
+  fill: rgba(255,255,255,0.85);
+  text-anchor: middle;
+  paint-order: stroke;
+  stroke: rgba(0,0,0,0.6);
+  stroke-width: 2.5px;
+  letter-spacing: .04em;
+}
+
+/* ── LAYER VIEW ── */
+.layers { display: flex; flex-direction: column; gap: 0; }
+.layer {
+  border: 1px solid var(--border);
+  border-bottom: none;
+  padding: .9rem 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  transition: background .2s;
+  cursor: pointer;
+  position: relative;
+}
+.layer:last-child { border-bottom: 1px solid var(--border); }
+.layer:hover { background: rgba(201,168,76,.04); }
+.layer-depth {
+  font-family: 'Cinzel', serif;
+  font-size: .62rem;
+  color: var(--muted);
+  letter-spacing: .08em;
+  min-width: 90px;
+  padding-top: .15rem;
+  flex-shrink: 0;
+}
+.layer-name {
+  font-family: 'Cinzel', serif;
+  font-size: .85rem;
+  color: var(--gold);
+  margin-bottom: .3rem;
+  letter-spacing: .05em;
+}
+.layer-desc {
+  font-size: .82rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+.layer-new {
+  font-size: .72rem;
+  color: var(--teal2);
+  font-style: italic;
+  margin-top: .2rem;
+}
+.layer-bar {
+  width: 5px;
+  border-radius: 3px;
+  align-self: stretch;
+  flex-shrink: 0;
+  min-height: 30px;
+}
+.layer:nth-child(1) .layer-bar { background: #4a9a6a; }
+.layer:nth-child(2) .layer-bar { background: #5a8a9a; }
+.layer:nth-child(3) .layer-bar { background: #7a6a4a; }
+.layer:nth-child(4) .layer-bar { background: #8a7a3a; }
+.layer:nth-child(5) .layer-bar { background: #9a5a2a; }
+.layer:nth-child(6) .layer-bar { background: #6a3a8a; }
+.layer:nth-child(7) .layer-bar { background: #2a4a7a; }
+
+/* ── PROMPT VIEW ── */
+.prompt-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+.prompt-title {
+  font-family: 'Cinzel', serif;
+  font-size: .7rem;
+  letter-spacing: .2em;
+  color: var(--amber);
+  text-transform: uppercase;
+  margin-bottom: .8rem;
+}
+.prompt-text {
+  font-size: .88rem;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+  font-family: 'Crimson Pro', serif;
+}
+.copy-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  padding: .2rem .6rem;
+  font-size: .7rem;
+  font-family: 'Cinzel', serif;
+  letter-spacing: .1em;
+  cursor: pointer;
+  transition: all .2s;
+}
+.copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+.note {
+  font-size: .8rem;
+  font-style: italic;
+  color: var(--muted);
+  margin-top: .5rem;
+  padding: .6rem .9rem;
+  border-left: 2px solid var(--amber);
+}
+</style>
+</head>
+<body>
+<header>
+  <span class="badge">KOI-5715.01 · Western Continent · Bay Settlement</span>
+  <h1>Cookopolis — Bay Revised Layout</h1>
+  <p class="sub">D-shaped coastal city design with tidal integration</p>
+</header>
+
+<div class="tabs">
+  <button class="tab on" onclick="show('aerial',this)">Aerial Layout</button>
+  <button class="tab" onclick="show('layers',this)">Layer Diagram</button>
+  <button class="tab" onclick="show('prompt',this)">Image Prompt</button>
+</div>
+
+<!-- AERIAL VIEW -->
+<div class="view on" id="aerial">
+<div class="aerial-wrap">
+<svg viewBox="0 0 800 750" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Water gradient -->
+    <radialGradient id="bayGrad" cx="85%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1a6a5a"/>
+      <stop offset="60%" stop-color="#0d4a3a"/>
+      <stop offset="100%" stop-color="#0a3528"/>
+    </radialGradient>
+    <!-- Central lake -->
+    <radialGradient id="lakeGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2a8a9a"/>
+      <stop offset="100%" stop-color="#1a5a6a"/>
+    </radialGradient>
+    <!-- Forest buffer -->
+    <radialGradient id="forestGrad" cx="30%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#1a3a1a"/>
+      <stop offset="100%" stop-color="#0d2a0d"/>
+    </radialGradient>
+    <!-- Scrubland -->
+    <radialGradient id="scrubGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#6a3a1a"/>
+      <stop offset="100%" stop-color="#4a2a0a"/>
+    </radialGradient>
+    <!-- Eco farms -->
+    <pattern id="farmPat" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#3a5a2a"/>
+      <rect x="0" y="0" width="4" height="4" fill="#4a7a3a" opacity=".6"/>
+    </pattern>
+    <!-- Aqua farms -->
+    <pattern id="aquaPat" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#1a5a4a"/>
+      <rect x="2" y="2" width="4" height="4" fill="#2a8a6a" opacity=".5"/>
+    </pattern>
+    <!-- Pasture -->
+    <pattern id="pasturePat" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+      <rect width="6" height="6" fill="#4a6a2a"/>
+      <circle cx="3" cy="3" r="1.5" fill="#6a9a3a" opacity=".5"/>
+    </pattern>
+    <!-- Orchard -->
+    <pattern id="orchPat" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+      <rect width="10" height="10" fill="#3a5a1a"/>
+      <circle cx="5" cy="5" r="2.5" fill="#5a8a2a" opacity=".7"/>
+    </pattern>
+    <!-- Residential -->
+    <pattern id="resPat" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect width="8" height="8" fill="#3a3a4a"/>
+      <rect x="1" y="1" width="3" height="3" fill="#5a5a7a" opacity=".8"/>
+      <rect x="5" y="1" width="2" height="3" fill="#5a5a7a" opacity=".6"/>
+    </pattern>
+    <!-- Tidal hatch -->
+    <pattern id="tidalPat" x="0" y="0" width="12" height="6" patternUnits="userSpaceOnUse">
+      <rect width="12" height="6" fill="#0d3a4a"/>
+      <line x1="0" y1="3" x2="12" y2="3" stroke="#2a8a9a" stroke-width="1.5" opacity=".7"/>
+    </pattern>
+
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softglow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background - scrubland continent -->
+  <rect width="800" height="750" fill="#2a1a0a"/>
+
+  <!-- Wider scrubland context -->
+  <ellipse cx="340" cy="375" rx="340" ry="340" fill="#3a2010" opacity=".8"/>
+
+  <!-- BAY - right side, D-shape opening -->
+  <path d="M 620 120 Q 780 200 800 375 Q 780 550 620 630 L 620 120 Z" fill="url(#bayGrad)"/>
+
+  <!-- Bay label area -->
+  <text x="730" y="355" class="zone-label" fill="#3dbba8" font-size="11">BAY /</text>
+  <text x="730" y="372" class="zone-label" fill="#3dbba8" font-size="11">INLET</text>
+
+  <!-- Tidal barrage across bay mouth -->
+  <line x1="620" y1="120" x2="720" y2="80" stroke="#c9a84c" stroke-width="5" stroke-linecap="round"/>
+  <line x1="720" y1="80" x2="800" y2="60" stroke="#c9a84c" stroke-width="5" stroke-linecap="round" stroke-dasharray="8,4"/>
+  <text x="700" y="68" class="zone-label" fill="#e8c97a" font-size="8">TIDAL BARRAGE</text>
+
+  <line x1="620" y1="630" x2="730" y2="670" stroke="#c9a84c" stroke-width="5" stroke-linecap="round"/>
+  <line x1="730" y1="670" x2="800" y2="690" stroke="#c9a84c" stroke-width="5" stroke-linecap="round" stroke-dasharray="8,4"/>
+
+  <!-- FOREST BUFFER ZONE - outermost land arc (west/north/south) -->
+  <path d="M 620 120
+           Q 580 80 500 60
+           Q 380 30 260 50
+           Q 140 70 80 160
+           Q 20 250 20 375
+           Q 20 500 80 590
+           Q 140 680 260 700
+           Q 380 720 500 690
+           Q 580 670 620 630
+           L 620 120 Z"
+        fill="url(#forestGrad)" opacity=".95"/>
+
+  <!-- ECO FARMS arc - north -->
+  <path d="M 620 120
+           Q 570 95 490 80
+           Q 390 55 280 75
+           Q 170 95 105 175
+           Q 60 240 55 320
+           L 165 340
+           Q 175 270 215 210
+           Q 270 140 370 115
+           Q 460 95 545 108
+           L 620 120 Z"
+        fill="url(#farmPat)" opacity=".9"/>
+
+  <!-- PASTURE arc - west -->
+  <path d="M 55 320 L 165 340
+           Q 160 375 165 410
+           L 55 430
+           Q 50 400 50 375 Q 50 347 55 320 Z"
+        fill="url(#pasturePat)" opacity=".9"/>
+
+  <!-- ORCHARD arc - south -->
+  <path d="M 55 430 L 165 410
+           Q 175 480 215 540
+           Q 270 610 370 635
+           Q 460 655 545 642
+           L 620 630
+           Q 570 655 490 670
+           Q 390 695 280 675
+           Q 170 655 105 575
+           Q 60 510 55 430 Z"
+        fill="url(#orchPat)" opacity=".9"/>
+
+  <!-- AQUACULTURE arc - bay shore -->
+  <path d="M 620 120 L 545 108
+           Q 575 130 595 160
+           L 620 120 Z"
+        fill="url(#aquaPat)" opacity=".85"/>
+  <path d="M 545 642 L 620 630
+           Q 595 600 575 575
+           L 545 642 Z"
+        fill="url(#aquaPat)" opacity=".85"/>
+
+  <!-- RESIDENTIAL ring -->
+  <path d="M 165 340
+           Q 175 270 215 210 Q 265 148 355 122 Q 430 103 510 118
+           L 545 108 Q 555 118 565 135 Q 590 175 598 220
+           L 510 230
+           Q 490 195 465 178 Q 420 158 360 162
+           Q 285 168 240 215 Q 208 250 200 295
+           L 165 340 Z"
+        fill="url(#resPat)" opacity=".9"/>
+
+  <path d="M 165 410
+           Q 175 480 215 540 Q 265 602 355 628 Q 430 647 510 632
+           L 545 642 Q 555 632 565 615 Q 590 575 598 530
+           L 510 520
+           Q 490 555 465 572 Q 420 592 360 588
+           Q 285 582 240 535 Q 208 500 200 455
+           L 165 410 Z"
+        fill="url(#resPat)" opacity=".9"/>
+
+  <!-- INNER RING - mixed use / commercial -->
+  <path d="M 200 295
+           Q 208 250 240 215 Q 285 168 360 162 Q 420 158 465 178 Q 490 195 510 230
+           L 598 220
+           Q 604 265 606 310 Q 607 340 607 375
+           L 510 375
+           Q 510 340 506 310 Q 498 270 475 245 Q 445 218 400 210
+           Q 345 204 305 228 Q 268 252 255 295
+           L 200 295 Z"
+        fill="#2a2a3a" opacity=".9"/>
+
+  <path d="M 200 455
+           Q 208 500 240 535 Q 285 582 360 588 Q 420 592 465 572 Q 490 555 510 520
+           L 598 530
+           Q 604 485 606 440 Q 607 410 607 375
+           L 510 375
+           Q 510 410 506 440 Q 498 480 475 505 Q 445 532 400 540
+           Q 345 546 305 522 Q 268 498 255 455
+           L 200 455 Z"
+        fill="#2a2a3a" opacity=".9"/>
+
+  <!-- CANAL connecting lake to bay -->
+  <path d="M 460 375 Q 520 355 580 340 Q 610 333 635 330" 
+        stroke="#2a8a9a" stroke-width="8" fill="none" opacity=".8"/>
+  <path d="M 460 375 Q 520 395 580 410 Q 610 417 635 420" 
+        stroke="#2a8a9a" stroke-width="6" fill="none" opacity=".6"/>
+
+  <!-- CENTRAL LAKE -->
+  <ellipse cx="370" cy="375" rx="90" ry="60" fill="url(#lakeGrad)" filter="url(#softglow)"/>
+  <ellipse cx="370" cy="375" rx="90" ry="60" fill="none" stroke="#3dbba8" stroke-width="1.5" opacity=".5"/>
+
+  <!-- CENTRAL SPIRES island -->
+  <ellipse cx="370" cy="375" rx="42" ry="28" fill="#1a1a2a"/>
+  <!-- Spire towers -->
+  <rect x="358" y="348" width="10" height="32" fill="#4a6a9a" rx="1"/>
+  <rect x="372" y="340" width="12" height="40" fill="#5a7aaa" rx="1"/>
+  <rect x="388" y="350" width="9" height="30" fill="#4a6a9a" rx="1"/>
+  <!-- Spire tops -->
+  <polygon points="363,348 358,340 368,348" fill="#7a9aca"/>
+  <polygon points="378,340 372,330 384,340" fill="#8aaada"/>
+  <polygon points="392,350 388,342 397,350" fill="#7a9aca"/>
+
+  <!-- PARKS & WATERWAYS labels -->
+  <text x="290" y="310" class="zone-label-sm" fill="#6a9a6a">PARKS &amp;</text>
+  <text x="290" y="322" class="zone-label-sm" fill="#6a9a6a">WATERWAYS</text>
+  <text x="290" y="445" class="zone-label-sm" fill="#6a9a6a">PARKS &amp;</text>
+  <text x="290" y="457" class="zone-label-sm" fill="#6a9a6a">WATERWAYS</text>
+
+  <!-- Zone labels -->
+  <text x="370" y="372" class="zone-label" font-size="7.5">CENTRAL</text>
+  <text x="370" y="382" class="zone-label" font-size="7.5">SPIRES</text>
+
+  <text x="160" y="248" class="zone-label" font-size="8">ECO FARMS</text>
+  <text x="160" y="500" class="zone-label" font-size="8">ORCHARDS</text>
+  <text x="80" y="378" class="zone-label" font-size="8">PASTURE</text>
+
+  <text x="480" y="162" class="zone-label" font-size="8">RESIDENTIAL</text>
+  <text x="480" y="173" class="zone-label" font-size="8">CLUSTERS</text>
+  <text x="480" y="588" class="zone-label" font-size="8">RESIDENTIAL</text>
+  <text x="480" y="599" class="zone-label" font-size="8">CLUSTERS</text>
+
+  <text x="100" y="108" class="zone-label" fill="#2a5a2a" font-size="9">FOREST BUFFER ZONE</text>
+
+  <!-- Aquaculture labels -->
+  <text x="578" y="138" class="zone-label" fill="#3dbba8" font-size="7.5">AQUACULTURE</text>
+  <text x="560" y="618" class="zone-label" fill="#3dbba8" font-size="7.5">AQUACULTURE</text>
+
+  <!-- Canal label -->
+  <text x="520" y="330" class="zone-label-sm" fill="#3dbba8" font-size="7">TIDAL CANAL</text>
+
+  <!-- Compass -->
+  <g transform="translate(50,680)">
+    <circle r="18" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+    <text x="0" y="-5" text-anchor="middle" font-family="Cinzel,serif" font-size="9" fill="#c9a84c">N</text>
+    <line x1="0" y1="-3" x2="0" y2="-14" stroke="#c9a84c" stroke-width="1.5"/>
+    <line x1="0" y1="3" x2="0" y2="14" stroke="#6a7585" stroke-width="1"/>
+  </g>
+
+  <!-- Scale note -->
+  <text x="400" y="740" text-anchor="middle" font-family="Crimson Pro,serif" font-size="9" fill="#6a7585" font-style="italic">Schematic layout — not to precise scale · Bay opens to the east toward the central sea</text>
+
+  <!-- Wind turbines - forest buffer -->
+  <g fill="none" stroke="#c9a84c" stroke-width="1" opacity=".6">
+    <line x1="90" y1="200" x2="90" y2="220"/>
+    <line x1="90" y1="210" x2="97" y2="204"/>
+    <line x1="90" y1="210" x2="83" y2="204"/>
+    <line x1="90" y1="210" x2="90" y2="220"/>
+    <line x1="130" y1="660" x2="130" y2="680"/>
+    <line x1="130" y1="670" x2="137" y2="664"/>
+    <line x1="130" y1="670" x2="123" y2="664"/>
+    <line x1="500" y1="50" x2="500" y2="70"/>
+    <line x1="500" y1="60" x2="507" y2="54"/>
+    <line x1="500" y1="60" x2="493" y2="54"/>
+  </g>
+
+</svg>
+</div>
+
+<div style="margin-top:1.2rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.6rem">
+  <div style="padding:.6rem .9rem;background:var(--panel);border:1px solid var(--border);border-left:3px solid #3dbba8">
+    <div style="font-family:'Cinzel',serif;font-size:.65rem;color:#3dbba8;letter-spacing:.1em;margin-bottom:.2rem">NEW — TIDAL BARRAGE</div>
+    <div style="font-size:.78rem;color:var(--muted)">Spans bay mouth. Primary power source using KOI's 4× Earth tides.</div>
+  </div>
+  <div style="padding:.6rem .9rem;background:var(--panel);border:1px solid var(--border);border-left:3px solid #3dbba8">
+    <div style="font-family:'Cinzel',serif;font-size:.65rem;color:#3dbba8;letter-spacing:.1em;margin-bottom:.2rem">NEW — AQUACULTURE</div>
+    <div style="font-size:.78rem;color:var(--muted)">Bay-shore zones harvesting KOI's green-biology rich coastal waters.</div>
+  </div>
+  <div style="padding:.6rem .9rem;background:var(--panel);border:1px solid var(--border);border-left:3px solid #3dbba8">
+    <div style="font-family:'Cinzel',serif;font-size:.65rem;color:#3dbba8;letter-spacing:.1em;margin-bottom:.2rem">NEW — TIDAL CANAL</div>
+    <div style="font-size:.78rem;color:var(--muted)">Connects central lake to bay. Tidal flow refreshes city waterways on 9-day cycle.</div>
+  </div>
+  <div style="padding:.6rem .9rem;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold)">
+    <div style="font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.2rem">MODIFIED — D-SHAPE</div>
+    <div style="font-size:.78rem;color:var(--muted)">Eastern arc replaced by bay coastline. All rings open toward the water.</div>
+  </div>
+  <div style="padding:.6rem .9rem;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--gold)">
+    <div style="font-family:'Cinzel',serif;font-size:.65rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.2rem">MODIFIED — AGRICULTURE</div>
+    <div style="font-size:.78rem;color:var(--muted)">East arc = aquaculture. North = eco farms. West = pasture. South = orchards.</div>
+  </div>
+  <div style="padding:.6rem .9rem;background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--amber)">
+    <div style="font-family:'Cinzel',serif;font-size:.65rem;color:var(--amber);letter-spacing:.1em;margin-bottom:.2rem">RETAINED — FOREST BUFFER</div>
+    <div style="font-size:.78rem;color:var(--muted)">Merges into existing coastal dark forest. Expands native ecosystem rather than replacing it.</div>
+  </div>
+</div>
+</div>
+
+<!-- LAYER VIEW -->
+<div class="view" id="layers">
+<div class="layers">
+  <div class="layer">
+    <div class="layer-bar"></div>
+    <div style="flex:1">
+      <div class="layer-name">Surface Level — The D-Shape City</div>
+      <div class="layer-depth">Ground · 0m</div>
+      <div class="layer-desc">Central Spires on lake island. Parks and waterways flanking. Residential clusters in mid-ring. Agricultural outer arc split: aquaculture (east/bay-facing), eco farms (north), pasture (west), orchards (south). Forest buffer merging into native coastal dark forest at perimeter.</div>
+      <div class="layer-new">↑ Tidal canal connects central lake to bay. Bay mouth sealed by tidal barrage.</div>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-bar"></div>
+    <div style="flex:1">
+      <div class="layer-name">Tidal Energy Infrastructure</div>
+      <div class="layer-depth">Bay · 0–20m depth</div>
+      <div class="layer-desc">Tidal barrage generators spanning bay entrance. Tidal stream turbines in canal. Sluice gates controlling tidal flow into city waterway system. Predictable 9-day neap/spring cycle allows precise generation scheduling.</div>
+      <div class="layer-new">↑ New addition. Potentially reduces nuclear load significantly — tidal is primary, nuclear becomes backup/industrial.</div>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-bar"></div>
+    <div style="flex:1">
+      <div class="layer-name">Utility & Logistics</div>
+      <div class="layer-depth">0–30m depth</div>
+      <div class="layer-desc">Water treatment, waste recycling, freight tunnels, data centers. Tidal canal infrastructure integrated at this level where it passes under the city footprint.</div>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-bar"></div>
+    <div style="flex:1">
+      <div class="layer-name">Light Industry</div>
+      <div class="layer-depth">30–150m depth</div>
+      <div class="layer-desc">Food production, electronics fabrication, workshops. Aquaculture processing relocated here from surface — bay catch processed underground, minimizing surface industrial footprint.</div>
+      <div class="layer-new">↑ Aquaculture processing added.</div>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-bar"></div>
+    <div style="flex:1">
+      <div class="layer-name">Heavy Industry</div>
+      <div class="layer-depth">150–300m depth</div>
+      <div class="layer-desc">Metal recycling, chemical plants. Energy storage potentially downsized — tidal power is predictable enough that large buffer storage is less critical than with solar or wind.</div>
+      <div class="layer-new">↑ Energy storage tier reduced due to tidal reliability.</div>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-bar"></div>
+    <div style="flex:1">
+      <div class="layer-name">Nuclear Complex</div>
+      <div class="layer-depth">300–500m depth</div>
+      <div class="layer-desc">SMR reactors now function as backup and heavy industrial load supply rather than primary power. Fuel reprocessing and waste storage unchanged. KOI's greater geological activity makes deep placement here especially important.</div>
+      <div class="layer-new">↑ Demoted from primary to backup role. Consider reducing to 2 SMRs from 3.</div>
+    </div>
+  </div>
+  <div class="layer">
+    <div class="layer-bar"></div>
+    <div style="flex:1">
+      <div class="layer-name">Deep Reserve Level</div>
+      <div class="layer-depth">500m+ depth</div>
+      <div class="layer-desc">Archives, seed vaults, secure supply bunkers, emergency habitats. Unchanged from original design. At this depth fully isolated from surface geological events — appropriate for KOI's more active tectonics.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- PROMPT VIEW -->
+<div class="view" id="prompt">
+<div class="prompt-box">
+  <div class="prompt-title">Aerial View Prompt</div>
+  <button class="copy-btn" onclick="copy('p1')">Copy</button>
+  <div class="prompt-text" id="p1">Aerial isometric illustration of a futuristic D-shaped coastal city on an alien planet, hyper-detailed, cinematic lighting from an orange K-type star overhead casting warm amber light.
+
+The city is D-shaped: the flat eastern face opens directly onto a large green-tinted bay/inlet. A tidal barrage with visible turbine structures spans the bay mouth. A tidal canal connects the bay to the central circular lake inside the city.
+
+From center outward:
+- CENTER: A circular lake with a small island holding three tall glass spires (Central Spires), surrounded by parks and waterways
+- RING 2: Mixed-use commercial and civic buildings
+- RING 3: Residential cluster neighborhoods with orange-tiled rooftops and green courtyard gardens
+- OUTER ARC (north): Eco farms with patchwork crop fields in earth tones, dark red-brown alien vegetation
+- OUTER ARC (west): Pasture land, open rolling fields
+- OUTER ARC (south): Orchards with rows of dark-leafed alien fruit trees
+- OUTER ARC (east/bay-facing): Aquaculture pens and marine farm platforms along the bay shore
+- PERIMETER: A dense forest buffer zone of dark purple-black alien trees merging into native coastal forest
+
+Wind turbines dot the forest buffer perimeter. Roads radiate outward like spokes from center. The bay water is a deep green-teal color. The sky is a warm amber-gold with orange-tinted clouds. Alien vegetation is dark burgundy-red and deep purple rather than green. The overall palette is warm amber, deep forest dark, teal water, terracotta rooftops.</div>
+</div>
+
+<div class="prompt-box">
+  <div class="prompt-title">Layer Diagram Prompt</div>
+  <button class="copy-btn" onclick="copy('p2')">Copy</button>
+  <div class="prompt-text" id="p2">Detailed cross-section infographic of a futuristic underground city beneath a coastal alien settlement, technical illustration style, dark background, labeled layers.
+
+Surface shows D-shaped city with bay on right, tidal barrage spanning bay entrance, central lake with glass spires, residential rings, alien dark-purple forest buffer.
+
+Underground layers from top to bottom, each clearly labeled with depth range:
+1. SURFACE (0m): City layout as described above, tidal canal visible
+2. TIDAL INFRASTRUCTURE (0-20m bay depth): Turbines, sluice gates, underwater canal
+3. UTILITY & LOGISTICS (0-30m): Water treatment, waste recycling, freight tunnels, data centers
+4. LIGHT INDUSTRY (30-150m): Food production, aquaculture processing, electronics, fabrication
+5. HEAVY INDUSTRY (150-300m): Metal recycling, energy storage, chemical plants
+6. NUCLEAR COMPLEX (300-500m): 2x SMR reactors (backup role), fuel reprocessing, waste storage
+7. DEEP RESERVE (500m+): Archives, seed vaults, secure bunkers, emergency habitats
+
+Color code each layer differently. Add horizontal connecting tunnels between sections. Warm amber lighting at surface transitioning to cool blue-grey underground. Labels clean and technical. Show rock strata between layers.</div>
+</div>
+
+<div class="note">These prompts are optimized for Midjourney (add --ar 16:9 for aerial, --ar 9:16 for layer diagram) or DALL-E 3. For Stable Diffusion add "masterpiece, best quality" at the start.</div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+function copy(id) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = event.target;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+</script>
+</body>
+</html>
